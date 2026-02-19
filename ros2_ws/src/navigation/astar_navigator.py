@@ -260,7 +260,7 @@ class Navigator(BaseNavigator):
         self.kdx = kdx
         self.kdy = kdy
         self.V_max = V_max
-        # self.om_max = om_max
+        self.om_max = om_max
         self.V_PREV_THRES = 0.0001
     
     def reset(self) -> None:
@@ -297,7 +297,7 @@ class Navigator(BaseNavigator):
         dt = t - self.t_prev
         traj = plan.desired_state(t)
 
-        # I want to calculate the below values with scipy.interpolate.splev to sample from spline parameters given by TrajectoryPlan
+        # Sample desired state and derivatives from spline parameters
         x_d = traj.x
         xd_d = splev(t, plan.path_x_spline, der=1)
         xdd_d = splev(t, plan.path_x_spline, der=2)
@@ -324,9 +324,9 @@ class Navigator(BaseNavigator):
         V = self.V_prev + a*dt
         ########## Code ends here ##########
 
-        # apply control limits (NOTE NOT USED HERE)
-        # V = np.clip(V, -self.V_max, self.V_max)
-        # om = np.clip(om, -self.om_max, self.om_max)
+        # apply control limits
+        V = np.clip(V, -self.V_max, self.V_max)
+        om = np.clip(om, -self.om_max, self.om_max)
 
         # save the commands that were applied and the time
         self.t_prev = t
