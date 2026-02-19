@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Navigation code (ported from Turtlebot utilities)
+# Navigation code (TidyBot2 A* trajectory tracking)
 
 import numpy as np
 import typing as T
@@ -282,17 +282,16 @@ class Navigator(BaseNavigator):
         cmd.angular.z = float(angular_velocity)
         return cmd
     
-    #needs to be changed to tidybot controls
     def compute_trajectory_tracking_control(self, state: Pose2D, plan: TrajectoryPlan, t: float) -> Twist:
         """ Compute control target using a trajectory tracking controller
 
         Args:
-            state (TurtleBotState): current robot state
+            state (Pose2D): current robot state (x, y, theta)
             plan (TrajectoryPlan): planned trajectory
             t (float): current timestep
 
         Returns:
-            TurtleBotControl: control command
+            Twist: control command (linear velocity, angular velocity)
         """
 
         dt = t - self.t_prev
@@ -343,8 +342,8 @@ class Navigator(BaseNavigator):
         """ Compute a trajectory plan using A* and cubic spline fitting
         
         Args:
-            state (TurtleBotState): state ###need to change turtlebotstate to tidybotstate
-            goal (TurtleBotState): goal
+            state (Pose2D): current robot state (x, y, theta)
+            goal (Pose2D): goal state (x, y, theta)
             occupancy (StochOccupancyGrid2D): occupancy
             resolution (float): resolution
             horizon (float): horizon
